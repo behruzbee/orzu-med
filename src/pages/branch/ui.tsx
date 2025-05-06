@@ -16,9 +16,9 @@ const BranchPage = () => {
   const { marketId } = useParams<{ marketId: string }>();
   const hotRef = useRef<HotTableRef>(null);
   const { data: market } = useGetMarketQuery(marketId || "")
-  const { mutate: createTable } = useCreateTableQuery()
-  const { mutate: updateTable } = useUpdateTableQuery()
-  const { mutate: deleteTable } = useDeleteTableQuery()
+  const { mutate: createTable, isPending: createPending } = useCreateTableQuery()
+  const { mutate: updateTable, isPending: updatePending } = useUpdateTableQuery()
+  const { mutate: deleteTable, isPending: deletePending } = useDeleteTableQuery()
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -109,8 +109,8 @@ const BranchPage = () => {
       <Flex justify="space-between" align="center" mb="md">
         <Title order={2}>Отчет по {formattedBranch}</Title>
         <Flex columnGap="sm">
-          {сheckPermissions("delete") && <Button onClick={() => handleDeleteTable()} color='red' size='sm' rightSection={<IconMinus />}>Удалить таблицу </Button>}
-          <Button onClick={() => handleCreateTable(START_DATA)} color='green' size='sm' rightSection={<IconPlus />}>Создать таблицу </Button>
+          {сheckPermissions("delete") && <Button loading={updatePending} onClick={() => handleDeleteTable()} color='red' size='sm' rightSection={<IconMinus />}>Удалить таблицу </Button>}
+          <Button loading={createPending} onClick={() => handleCreateTable(START_DATA)} color='green' size='sm' rightSection={<IconPlus />}>Создать таблицу </Button>
         </Flex>
       </Flex>
       <Card maw="98%" shadow="sm" padding="lg" radius="md" withBorder>
@@ -220,6 +220,7 @@ const BranchPage = () => {
             leftSection={<IconPhoto size={14} />}
             rightSection={<IconArrowRight size={14} />}
             onClick={handleUpdateTable}
+            loading={updatePending}
           >
             Cохранить отчет
           </Button>
