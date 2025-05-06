@@ -11,6 +11,7 @@ export const сheckPermissions = (permission?: string) => {
   const hasPermission =
     me.role.name === 'admin' ||
     JSON.parse(me.role.permissionsMarket || '').some(
+      // @ts-ignore
       (item) => item === permission
     )
 

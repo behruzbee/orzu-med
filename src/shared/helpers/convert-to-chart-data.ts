@@ -9,7 +9,7 @@ export const convertToChartData = (
     // @ts-ignore
     res.date = day
 
-    dateHeaders.forEach((header) => {
+    dateHeaders.forEach(() => {
       const result = rows.reduce((acc, row) => {
         const res = row.reduce((acc, curr, resIdx) => {
                 if(resIdx > 1 && resIdx < resIdx + idx ) {

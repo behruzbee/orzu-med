@@ -1,12 +1,9 @@
 import HotTable, { HotColumn, HotTableRef } from "@handsontable/react-wrapper"
 import { Box, Card, Flex, LoadingOverlay, Overlay, Pagination, ScrollArea, Title } from "@mantine/core"
 import { useGetMarketsQuery } from "entities/markets";
-import { AreaChart } from '@mantine/charts';
 import { useEffect, useRef, useState } from "react";
 import { сheckPermissions } from "shared/helpers/check-permissions"
 import { START_DATA } from "shared/constants/table";
-import { convertToChartData } from "shared/helpers/convert-to-chart-data";
-import { getAllThursdaysOfMonth } from "shared/helpers/get-all-thursdays-of-month";
 
 const StatisticPage = () => {
   const [hasChanges] = useState(false);
@@ -58,30 +55,6 @@ const StatisticPage = () => {
     return newCell
   })
 
-
-  const currentTable = markets[0].tables?.[activePage - 1]
-  const days = getAllThursdaysOfMonth(new Date(currentTable?.data.date).getFullYear(), new Date(currentTable?.data.date).getMonth())
-
-
-  const data2 = markets.map((market) => {
-    const currentTable = market.tables?.[activePage - 1]
-    if (currentTable) {
-      // @ts-ignore
-      const marketData = currentTable.data.rows.map((row, idx) => {
-        // @ts-ignore
-        const data = row.map(item => typeof item === "number" ? item : 0)
-        // @ts-ignore
-
-        return data
-      })
-      return marketData
-    }
-    return []
-  })
-
-  const chartData = convertToChartData(data2, dateHeaders, days)
-
-
   return (
     <ScrollArea>
       {сheckPermissions() || <Overlay color="#000" backgroundOpacity={0.2} blur={12} />}
@@ -89,7 +62,6 @@ const StatisticPage = () => {
         <Title order={2}>Отчеты </Title>
       </Flex>
       <Card maw="98%" shadow="sm" padding="lg" radius="md" withBorder>
-
         <Box my="50px">
           <HotTable
             ref={hotRef}
