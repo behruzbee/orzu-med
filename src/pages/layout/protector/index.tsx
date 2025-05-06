@@ -6,7 +6,7 @@ import { useGetMeQuery } from 'entities/auth';
 const ProtectorLayout = () => {
         const { data: me, isFetched } = useGetMeQuery()
 
-        if (!me && isFetched) {
+        if (!me && !isFetched) {
                 return <Navigate to="/login" />
         }
 
