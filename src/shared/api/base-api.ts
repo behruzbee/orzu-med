@@ -5,7 +5,6 @@ import { TOKEN } from "shared/constants/env"
 
 const clientApi = axios.create({
 	baseURL: "https:/orzumedbackend-production.up.railway.app",
-	withCredentials: true
 })
 
 clientApi.interceptors.request.use(
