@@ -1,19 +1,22 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { MainLayout } from '../main-layout';
-import { Box, Flex } from '@mantine/core';
+import { Box, Card, Flex } from '@mantine/core';
+import { DoubleNavbar } from 'widgets/navbar';
+import { useGetMeQuery } from 'entities/auth';
 
 const ProtectorLayout = () => {
-        const isAuth = true;
+        const { data: me, isFetched } = useGetMeQuery()
 
-        if (!isAuth) {
+        if (!me && isFetched) {
                 return <Navigate to="/login" />
         }
 
         return (
-                <Flex>
-                        <MainLayout />
+                <Flex w="100%" mih="100vh">
+                        <DoubleNavbar />
                         <Box w="100%" px={20}>
-                                <Outlet />
+                                <Card mt="md" maw="98%" shadow="sm" padding="lg" radius="md" withBorder>
+                                        <Outlet />
+                                </Card>
                         </Box>
                 </Flex>
         )
