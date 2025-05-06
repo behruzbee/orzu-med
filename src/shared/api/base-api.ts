@@ -4,7 +4,7 @@ import { TOKEN } from "shared/constants/env"
 
 
 const clientApi = axios.create({
-	baseURL: import.meta.env.VITE_APP_BASE_URL,
+	baseURL: "https:/orzumedbackend-production.up.railway.app",
 	withCredentials: true
 })
 
