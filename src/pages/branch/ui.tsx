@@ -42,7 +42,8 @@ const BranchPage = () => {
     .map((char, idx) => (idx === 0 ? char.toUpperCase() : char))
     .join("");
 
-  const dateHeaders = getAllThursdaysOfMonth(new Date().getFullYear(), new Date().getMonth())
+  // @ts-ignore
+  const dateHeaders = getAllThursdaysOfMonth(new Date(market.tables[activePage - 1].createAt).getFullYear(), new Date(market.tables[activePage - 1].createAt).getMonth())
 
   const handleCreateTable = (data: any) => {
     const hotInstance = hotRef.current?.hotInstance;
