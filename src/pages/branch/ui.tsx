@@ -161,7 +161,6 @@ const BranchPage = () => {
 
               if (col < 2) {
                 obj.readOnly = true
-                obj.className = "yellow-cell"
               }
               else {
                 obj.className = "gray-cell"

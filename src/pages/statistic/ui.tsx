@@ -102,12 +102,8 @@ const StatisticPage = () => {
             cells={(cell, col) => {
               const obj: any = {}
               obj.readOnly = true
-              if (col < 2 || col > 8) {
-                obj.className = "yellow-cell"
-              }
-              else {
-                obj.className = "gray-cell"
-              }
+
+              obj.className = "gray-cell"
               if (col == 1 && cell === 4) {
                 obj.className = "green-cell"
               } else if (col == 0 && cell === 4) {
@@ -185,7 +181,7 @@ const StatisticPage = () => {
         />
  */}
       </Card >
-      
+
     </ScrollArea>
   )
 }
