@@ -4,6 +4,7 @@ import { useGetMarketsQuery } from "entities/markets";
 import { useEffect, useRef, useState } from "react";
 import { сheckPermissions } from "shared/helpers/check-permissions"
 import { START_DATA } from "shared/constants/table";
+// import { WeeklyPage } from "pages/weekly-page";
 
 const StatisticPage = () => {
   const [hasChanges] = useState(false);
@@ -49,17 +50,25 @@ const StatisticPage = () => {
 
 
   const endData = START_DATA.map((cell, idx) => {
-    const currentCell = data.map(cell => cell[idx])
-    const totalCell = currentCell.reduce((acc, curr) => acc + curr, 0)
-    const newCell = [...cell, ...currentCell, totalCell, 0, 0]
+    const currentCell = data.map(cell => Math.floor(cell[idx]))
+    const totalCell = currentCell.reduce((acc, curr) => Math.floor(acc + curr), 0)
+    const newCell = [...cell, ...currentCell, Math.floor(totalCell), 0, Math.floor(totalCell / markets.length)]
     return newCell
   })
+
+  // @ts-ignore
+  const currentTable = markets[0].tables[activePage - 1]
 
   return (
     <ScrollArea>
       {сheckPermissions() || <Overlay color="#000" backgroundOpacity={0.2} blur={12} />}
-      <Flex justify="space-between" align="center" mb="md">
-        <Title order={2}>Отчеты </Title>
+      {/* <WeeklyPage /> */}
+      <Flex mt="lg" justify="space-between" align="center" mb="md">
+        {/* @ts-ignore */}
+        {currentTable && <Title order={2}>Отчет по  {new Date(currentTable.data?.date).toLocaleDateString('ru-RU', {
+          month: '2-digit',
+          year: 'numeric'
+        })}</Title>}
       </Flex>
       <Card maw="98%" shadow="sm" padding="lg" radius="md" withBorder>
         <Box my="50px">
@@ -153,7 +162,7 @@ const StatisticPage = () => {
             <HotColumn />
             <HotColumn />
             {dateHeaders.map((_, index) => (
-              <HotColumn key={index} type="numeric" readOnly={false} />
+              <HotColumn key={index} readOnly={false} />
             ))}
             <HotColumn />
             <HotColumn />
@@ -162,7 +171,7 @@ const StatisticPage = () => {
           <Pagination total={markets[0].tables?.length || 1} value={activePage} onChange={setPage} mt="sm"></Pagination>
         </Box>
         {/* <Title order={2}>Статистика</Title> */}
-       {/*  <AreaChart
+        {/*  <AreaChart
           h={300}
           data={chartData}
           dataKey="date"
@@ -176,6 +185,7 @@ const StatisticPage = () => {
         />
  */}
       </Card >
+      
     </ScrollArea>
   )
 }

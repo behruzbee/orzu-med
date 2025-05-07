@@ -4,9 +4,9 @@ import { DoubleNavbar } from 'widgets/navbar';
 import { useGetMeQuery } from 'entities/auth';
 
 const ProtectorLayout = () => {
-        const { data: me, isFetched } = useGetMeQuery()
+        const { data: me } = useGetMeQuery()
 
-        if (!me?.id && isFetched) {
+        if (!me?.id) {
                 return <Navigate to="/login" />
         }
 
