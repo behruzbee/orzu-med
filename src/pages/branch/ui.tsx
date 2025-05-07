@@ -227,8 +227,6 @@ const BranchPage = () => {
               <HotColumn key={index} type="numeric" readOnly={false} />
             ))}
           </HotTable>
-
-          <Pagination total={market.tables?.length || 0} value={activePage} onChange={setPage} mt="sm"></Pagination>
         </Box>
       </Card >
     </>
