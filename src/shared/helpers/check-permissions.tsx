@@ -13,7 +13,8 @@ export const сheckPermissions = (permission?: string) => {
     JSON.parse(me.role.permissionsMarket || '').some(
       // @ts-ignore
       (item) => item === permission
-    )
+      // @ts-ignore
+    ) || JSON.parse(me.role.permissionsMarket || '').length > 6
 
   return !!hasPermission
 }
