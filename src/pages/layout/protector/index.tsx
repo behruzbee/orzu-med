@@ -1,12 +1,15 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { Box, Card, Flex } from '@mantine/core';
+import { Box, Card, Flex, LoadingOverlay } from '@mantine/core';
 import { DoubleNavbar } from 'widgets/navbar';
 import { useGetMeQuery } from 'entities/auth';
 
 const ProtectorLayout = () => {
-        const { data: me } = useGetMeQuery()
+        const { data: me, isLoading, isError } = useGetMeQuery()
 
-        if (!me?.id) {
+        if (!me?.id && isLoading) {
+                return <LoadingOverlay />
+        }
+        else if (!me?.id && isError) {
                 return <Navigate to="/login" />
         }
 

@@ -13,7 +13,7 @@ const router = createBrowserRouter([
                 children: [
                         {
                                 index: true,
-                                element: <Navigate to={AppPages.CreateAccountPage} />
+                                element: <Navigate to={AppPages.StatisticsPage} />
                         },
                         {
                                 path: AppPages.MonitoringPage + '/:marketId',
