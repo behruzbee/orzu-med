@@ -43,7 +43,8 @@ const BranchPage = () => {
     .join("");
 
   // @ts-ignore
-  const dateHeaders = getAllThursdaysOfMonth(new Date(market.tables[activePage - 1].data.date).getFullYear(), new Date(market.tables[activePage - 1].data.date).getMonth())
+  const dateHeaders = getAllThursdaysOfMonth(new Date(market.tables[activePage - 1]?.data?.date).getFullYear(), new Date(market.tables[activePage - 1].data?.date).getMonth())
+
 
   const handleCreateTable = (data: any) => {
     const hotInstance = hotRef.current?.hotInstance;
@@ -108,7 +109,10 @@ const BranchPage = () => {
     <>
       {сheckPermissions(market.name) || <Overlay color="#000" backgroundOpacity={0.2} blur={12} />}
       <Flex justify="space-between" align="center" mb="md">
-        <Title order={2}>Отчет по {formattedBranch}</Title>
+        <Title order={2}>Отчет по {formattedBranch} {new Date(market.tables[activePage - 1].data?.date).toLocaleDateString('ru-RU', {
+          month: '2-digit',
+          year: 'numeric'
+        })}</Title>
         <Flex columnGap="sm">
           {сheckPermissions("delete") && <Button loading={updatePending} onClick={() => handleDeleteTable()} color='red' size='sm' rightSection={<IconMinus />}>Удалить таблицу </Button>}
           <Button loading={createPending} onClick={() => handleCreateTable(START_DATA)} color='green' size='sm' rightSection={<IconPlus />}>Создать таблицу </Button>

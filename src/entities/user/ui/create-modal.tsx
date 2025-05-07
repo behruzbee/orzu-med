@@ -20,8 +20,8 @@ const CreateUserModal = ({ open, close }: { open: boolean, close: VoidFunction }
         const { mutate: createUser, isPending } = useCreateUserQuery()
         const { data: permissisons } = useGetPermissionsQuery()
         const [orders, setOrders] = useState<string[]>([])
-
         const { data: markets } = useGetMarketsQuery()
+
 
         if (!markets) {
                 return <LoadingOverlay />
