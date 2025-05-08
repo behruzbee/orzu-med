@@ -1,32 +1,33 @@
 /* @ts-ignore */
-export function collectGroupedByPosition(markets) {
+export function collectGroupedByWeek(markets) {
   const result = []
 
-  const numStores = markets.length
-  const numTables = markets[0].length
+  const numMarkets = markets.length
+  const numRows = markets[0][0].length
+  const numWeeks = markets[0][0][0].length - 2
 
-  for (let tableIndex = 0; tableIndex < numTables; tableIndex++) {
-    const numRows = markets[0][tableIndex].length
-    const numCols = markets[0][tableIndex][0].length - 2
+  for (let weekIndex = 0; weekIndex < numWeeks; weekIndex++) {
+    const weekData = []
 
     for (let rowIndex = 0; rowIndex < numRows; rowIndex++) {
-      const rowGroup = []
+      const row = []
 
-      for (let colIndex = 0; colIndex < numCols; colIndex++) {
-        const values = []
+      const code = markets[0][0][rowIndex][0]
+      const name = markets[0][0][rowIndex][1]
+      row.push(code, name)
 
-        for (let storeIndex = 0; storeIndex < numStores; storeIndex++) {
-          const value = markets[storeIndex][tableIndex][rowIndex][colIndex + 2]
-          values.push(value)
-        }
-
-        rowGroup.push(values)
+      for (let marketIndex = 0; marketIndex < numMarkets; marketIndex++) {
+        const value = markets[marketIndex][0][rowIndex][weekIndex + 2]
+        row.push(value)
       }
 
-      result.push(rowGroup)
+      weekData.push(row)
     }
+
+    result.push(weekData)
   }
 
+  console.log(result);
   return result
 }
 

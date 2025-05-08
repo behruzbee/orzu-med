@@ -3,9 +3,8 @@ import { Box, Card, Flex, LoadingOverlay, Overlay, Pagination, ScrollArea, Title
 import { useGetMarketsQuery } from "entities/markets";
 import { useEffect, useRef, useState } from "react";
 import { сheckPermissions } from "shared/helpers/check-permissions"
-import { START_DATA } from "shared/constants/table";
 import { getAllThursdaysOfMonth } from "shared/helpers/get-all-thursdays-of-month";
-import { bb12, collectGroupedByPosition } from "shared/helpers/splitter";
+import { collectGroupedByWeek } from "shared/helpers/splitter";
 // import { WeeklyPage } from "pages/weekly-page";
 
 const StatisticPage = () => {
@@ -45,16 +44,19 @@ const StatisticPage = () => {
     })
   })
 
-  const res = collectGroupedByPosition(bb1)
-  const res1 = bb12(res, activePage)
+  const res = collectGroupedByWeek(bb1)
+
+
+  console.log(markets);
 
   const dateHeaders = markets.map((market) => market.name)
 
-  const endData = START_DATA.map((cell, idx) => {
-    const totalCell = res1[idx].reduce((acc, curr) => Math.floor(acc + curr), 0)
-    const newCell = [...cell, ...res1[idx], Math.floor(totalCell), 0, Math.floor(totalCell / markets.length)]
-    return newCell
+  const endData = res[activePage - 1].map((row) => {
+    const totalCount = row.reduce((acc, curr) => acc + (typeof curr === "number" ? curr : 0), 0)
+    return [...row, totalCount.toFixed(1), 0, (totalCount / markets.length).toFixed(1)]
   })
+
+
 
   return (
     <ScrollArea>
@@ -162,7 +164,7 @@ const StatisticPage = () => {
             <HotColumn />
             <HotColumn />
           </HotTable>
-          <Pagination total={res[0].length} value={activePage} onChange={setPage} mt="sm"></Pagination>
+          <Pagination total={res.length} value={activePage} onChange={setPage} mt="sm"></Pagination>
         </Box>
       </Card >
     </ScrollArea>
