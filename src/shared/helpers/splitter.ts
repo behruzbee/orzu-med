@@ -25,10 +25,9 @@ export function collectGroupedByWeek(markets) {
           const value = marketTable[rowIndex][weekIndex + 2] ?? null
           values.push(value)
         }
-
         // Проверка: если хотя бы один market дал значение ≠ null, добавляем строку
         const hasAtLeastOneValue = values.some(
-          (v) => v !== null && v !== 'null'
+         (v) => v !== null && v !== 'null' && v !== '' && String(v).trim() !== ''
         )
         if (hasAtLeastOneValue) {
           row.push(...values)
