@@ -33,10 +33,14 @@ export function collectGroupedByPosition(markets) {
 export function bb12(tables: number[][][], week: number) {
   const result = []
 
-  for (let i = 0; i < 27; i++) {
-    const table = tables[i]
-    const res = table[week - 1]
-    result.push(res)
+  if (tables) {
+    for (let i = 0; i < 27; i++) {
+      const table = tables[i]
+      if (table) {
+        const res = table[week - 1]
+        result.push(res)
+      }
+    }
   }
 
   return result

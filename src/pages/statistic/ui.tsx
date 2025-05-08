@@ -56,8 +56,6 @@ const StatisticPage = () => {
     return newCell
   })
 
-
-
   return (
     <ScrollArea>
       {сheckPermissions() || <Overlay color="#000" backgroundOpacity={0.2} blur={12} />}
