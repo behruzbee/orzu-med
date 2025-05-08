@@ -46,6 +46,7 @@ const BranchPage = () => {
 
   const dateHeaders = market.tables[activePage - 1] ? getAllThursdaysOfMonth(new Date(market.tables[activePage - 1].data?.date).getFullYear(), new Date(market.tables[activePage - 1].data?.date).getMonth()) : getAllThursdaysOfMonth(new Date().getFullYear(), new Date().getMonth())
 
+
   const handleCreateTable = (data: any) => {
     const hotInstance = hotRef.current?.hotInstance;
     if (!hotInstance) return;
@@ -212,6 +213,10 @@ const BranchPage = () => {
               else if (col == 0 && cell === 25) {
                 obj.className = "teal-cell"
               }
+
+              if(col > dateHeaders.length + 1) {
+                obj.readOnly = true
+              } 
 
               return obj
             }}
