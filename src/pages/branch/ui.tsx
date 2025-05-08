@@ -1,6 +1,7 @@
 import { HotColumn, HotTable, HotTableRef } from '@handsontable/react-wrapper';
 import { Box, Button, Card, Flex, LoadingOverlay, Overlay, Pagination, Title } from '@mantine/core';
 import { IconArrowRight, IconMinus, IconPhoto, IconPlus } from '@tabler/icons-react';
+import * as XLSX from 'xlsx';
 import { useParams } from 'react-router-dom';
 import { getAllThursdaysOfMonth } from 'shared/helpers/get-all-thursdays-of-month';
 import { useEffect, useRef, useState } from 'react';
@@ -103,6 +104,22 @@ const BranchPage = () => {
     }
   }
 
+  const handleExportToExcel = () => {
+    const hotInstance = hotRef.current?.hotInstance;
+    if (!hotInstance) return;
+
+    const data = hotInstance.getData();
+    const headers = hotInstance.getColHeader() as string[];
+
+    const worksheetData = [headers, ...data];
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Отчет');
+
+    const formattedDate = new Date().toLocaleDateString('ru-RU').replace(/\//g, '-');
+    XLSX.writeFile(workbook, `Отчет-${formattedDate}.xlsx`);
+  };
+
   if (activePage > market.tables.length && activePage > 1) {
     setPage(1)
   }
@@ -125,6 +142,15 @@ const BranchPage = () => {
           >
             Cохранить отчет
           </Button>}
+          {market.tables[activePage - 1] &&
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleExportToExcel}
+            >
+              Экспорт в Excel
+            </Button>
+          }
           {сheckPermissions("delete") && market.tables.length > 1 && <Button loading={deletePending} onClick={() => handleDeleteTable()} color='red' size='sm' rightSection={<IconMinus />}>Удалить таблицу </Button>}
           <Button loading={createPending} onClick={() => handleCreateTable(START_DATA)} color='green' size='sm' rightSection={<IconPlus />}>Создать таблицу </Button>
         </Flex>
@@ -214,9 +240,9 @@ const BranchPage = () => {
                 obj.className = "teal-cell"
               }
 
-              if(col > dateHeaders.length + 1) {
+              if (col > dateHeaders.length + 1) {
                 obj.readOnly = true
-              } 
+              }
 
               return obj
             }}
