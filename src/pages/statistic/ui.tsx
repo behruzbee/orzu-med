@@ -1,5 +1,7 @@
 import HotTable, { HotColumn, HotTableRef } from "@handsontable/react-wrapper"
-import { Box, Card, Flex, LoadingOverlay, Overlay, Pagination, ScrollArea, Title } from "@mantine/core"
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import { Box, Button, Card, Flex, LoadingOverlay, Overlay, Pagination, ScrollArea, Title } from "@mantine/core"
 import { useGetMarketsQuery } from "entities/markets";
 import { useEffect, useRef, useState } from "react";
 import { сheckPermissions } from "shared/helpers/check-permissions"
@@ -47,8 +49,6 @@ const StatisticPage = () => {
   const res = collectGroupedByWeek(bb1)
 
 
-  console.log(markets);
-
   const dateHeaders = markets.map((market) => market.name)
 
   const endData = res[activePage - 1].map((row) => {
@@ -56,7 +56,22 @@ const StatisticPage = () => {
     return [...row, totalCount.toFixed(1), 0, (totalCount / markets.length).toFixed(1)]
   })
 
+  const handleExportToExcel = () => {
+    const hot = hotRef.current?.hotInstance;
+    if (!hot) return;
 
+    const wsData = [
+      hot.getColHeader(),
+      ...hot.getData()
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(wsData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Отчет");
+
+    const wbout = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    saveAs(new Blob([wbout], { type: "application/octet-stream" }), `Отчет_${combined[activePage - 1]}.xlsx`);
+  };
 
   return (
     <ScrollArea>
@@ -65,6 +80,7 @@ const StatisticPage = () => {
       <Flex mt="lg" justify="space-between" align="center" mb="md">
         {/* @ts-ignore */}
         <Title order={2}>Отчет по  {combined[activePage - 1]}</Title>
+        <Button onClick={handleExportToExcel}>Скачать Excel</Button>
       </Flex>
       <Card maw="98%" shadow="sm" padding="lg" radius="md" withBorder>
         <Box my="50px">
