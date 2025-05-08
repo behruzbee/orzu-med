@@ -39,7 +39,6 @@ const StatisticPage = () => {
 
   const combined = weeks.flat()
 
-
   const bb1 = markets.map((market) => {
     return market.tables?.map(table => {
       return table.data.rows
@@ -57,8 +56,7 @@ const StatisticPage = () => {
     return newCell
   })
 
-  // @ts-ignore
-  const currentTable = markets[0].tables[activePage - 1]
+
 
   return (
     <ScrollArea>
@@ -66,10 +64,7 @@ const StatisticPage = () => {
       {/* <WeeklyPage /> */}
       <Flex mt="lg" justify="space-between" align="center" mb="md">
         {/* @ts-ignore */}
-        {currentTable && <Title order={2}>Отчет по  {new Date(currentTable.data?.date).toLocaleDateString('ru-RU', {
-          month: '2-digit',
-          year: 'numeric'
-        })}</Title>}
+        <Title order={2}>Отчет по  {combined[activePage - 1]}</Title>
       </Flex>
       <Card maw="98%" shadow="sm" padding="lg" radius="md" withBorder>
         <Box my="50px">
@@ -169,24 +164,9 @@ const StatisticPage = () => {
             <HotColumn />
             <HotColumn />
           </HotTable>
-          <Pagination total={combined.length} value={activePage} onChange={setPage} mt="sm"></Pagination>
+          <Pagination total={res[0].length} value={activePage} onChange={setPage} mt="sm"></Pagination>
         </Box>
-        {/* <Title order={2}>Статистика</Title> */}
-        {/*  <AreaChart
-          h={300}
-          data={chartData}
-          dataKey="date"
-          series={dateHeaders.map((name, idx) => ({
-            name,
-            color: ["blue", "cyan", "grape", "green", "orange", "red", "indigo", "pink"][idx]
-          }))}
-          curveType="linear"
-          tickLine="xy"
-          gridAxis="xy"
-        />
- */}
       </Card >
-
     </ScrollArea>
   )
 }
