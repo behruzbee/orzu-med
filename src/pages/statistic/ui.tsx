@@ -4,6 +4,8 @@ import { useGetMarketsQuery } from "entities/markets";
 import { useEffect, useRef, useState } from "react";
 import { сheckPermissions } from "shared/helpers/check-permissions"
 import { START_DATA } from "shared/constants/table";
+import { getAllThursdaysOfMonth } from "shared/helpers/get-all-thursdays-of-month";
+import { bb12, collectGroupedByPosition } from "shared/helpers/splitter";
 // import { WeeklyPage } from "pages/weekly-page";
 
 const StatisticPage = () => {
@@ -29,30 +31,29 @@ const StatisticPage = () => {
     return <LoadingOverlay visible={true} />;
   }
 
-  const data = markets.map((market) => {
-    const currentTable = market.tables?.[activePage - 1]
-    if (currentTable) {
-      // @ts-ignore
-      const marketData = currentTable.data.rows.map((row, idx) => {
-        // @ts-ignore
-        const data = row.map(item => typeof item === "number" ? item : 0)
-        // @ts-ignore
-        const sum = data.reduce((acc, curr) => acc + curr, 0)
-        return sum
-      })
-      return marketData
-    }
-    return []
+  // @ts-ignore
+  const weeks = markets[0].tables.map((market, idx) => {
+    // @ts-ignore
+    return getAllThursdaysOfMonth(new Date(market.createdAt).getFullYear(), new Date(market.createdAt).getMonth())
   })
 
+  const combined = weeks.flat()
+
+
+  const bb1 = markets.map((market) => {
+    return market.tables?.map(table => {
+      return table.data.rows
+    })
+  })
+
+  const res = collectGroupedByPosition(bb1)
+  const res1 = bb12(res, activePage)
 
   const dateHeaders = markets.map((market) => market.name)
 
-
   const endData = START_DATA.map((cell, idx) => {
-    const currentCell = data.map(cell => Math.floor(cell[idx]))
-    const totalCell = currentCell.reduce((acc, curr) => Math.floor(acc + curr), 0)
-    const newCell = [...cell, ...currentCell, Math.floor(totalCell), 0, Math.floor(totalCell / markets.length)]
+    const totalCell = res1[idx].reduce((acc, curr) => Math.floor(acc + curr), 0)
+    const newCell = [...cell, ...res1[idx], Math.floor(totalCell), 0, Math.floor(totalCell / markets.length)]
     return newCell
   })
 
@@ -168,7 +169,7 @@ const StatisticPage = () => {
             <HotColumn />
             <HotColumn />
           </HotTable>
-          <Pagination total={markets[0].tables?.length || 1} value={activePage} onChange={setPage} mt="sm"></Pagination>
+          <Pagination total={combined.length} value={activePage} onChange={setPage} mt="sm"></Pagination>
         </Box>
         {/* <Title order={2}>Статистика</Title> */}
         {/*  <AreaChart
