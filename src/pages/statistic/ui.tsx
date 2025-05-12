@@ -48,7 +48,6 @@ const StatisticPage = () => {
 
   const res = collectGroupedByWeek(bb1)
 
-
   const dateHeaders = markets.map((market) => market.name)
 
   const endData = res[activePage - 1].map((row) => {
