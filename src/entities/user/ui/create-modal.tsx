@@ -16,7 +16,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 const CreateUserModal = ({ open, close }: { open: boolean, close: VoidFunction }) => {
-        const { mutate: createRole } = useCreateRoleQuery()
+        const { mutate: createRole, isPending: isPendingRole } = useCreateRoleQuery()
         const { mutate: createUser, isPending } = useCreateUserQuery()
         const { data: permissisons } = useGetPermissionsQuery()
         const [orders, setOrders] = useState<string[]>([])
@@ -91,7 +91,7 @@ const CreateUserModal = ({ open, close }: { open: boolean, close: VoidFunction }
                                                 comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                                         />
 
-                                        <Button type="submit" loading={isPending}>
+                                        <Button type="submit" loading={isPending || isPendingRole}>
                                                 Сохранить
                                         </Button>
                                 </Stack>

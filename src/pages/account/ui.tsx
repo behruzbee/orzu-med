@@ -62,7 +62,6 @@ const AccountPage = () => {
             <Table.Tbody>{rows}</Table.Tbody>
           </Table>
         </ScrollArea>
-
       </Card>
     </>
   )
